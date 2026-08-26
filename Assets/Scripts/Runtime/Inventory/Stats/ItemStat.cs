@@ -8,7 +8,14 @@ namespace Game.Inventory
     /// Extend this enum when the game introduces additional item statistics.
     /// </summary>
     public enum ItemStat
+    {
+        Damage,
+        Armor,
+        AttackSpeed,
+        CriticalChance,
+        MovementSpeed,
         Health,
+        Mana,
         Value
     }
 

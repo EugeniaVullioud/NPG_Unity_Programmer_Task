@@ -10,11 +10,6 @@ namespace Game.Inventory
     {
         LeftHand,
         RightHand,
-        Head,
-        Chest,
-        Legs,
-        Feet,
-        Accessory
     }
 
     /// <summary>

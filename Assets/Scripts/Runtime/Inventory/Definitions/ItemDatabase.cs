@@ -49,5 +49,12 @@ namespace Game.Inventory
 
             return lookup.TryGetValue(id, out definition);
         }
+
+#if UNITY_EDITOR || UNITY_INCLUDE_TESTS
+        public void SetDefinitionsForTesting(IEnumerable<ItemDefinition> definitions)
+        {
+            this.definitions = new List<ItemDefinition>(definitions);
+        }
+#endif
     }
 }

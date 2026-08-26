@@ -19,11 +19,9 @@ namespace Game.Inventory
         /// <inheritdoc />
         public string Id => "inventory";
 
-        //public InventorySaveParticipant(Inventory inventory, ItemDatabase itemDatabase, ItemModifierDatabase modifierDatabase)
         public InventorySaveParticipant(Inventory inventory, ItemDatabase itemDatabase)
         {
             this.inventory = inventory ?? throw new ArgumentNullException(nameof(inventory));
-            //this.modifierDatabase = modifierDatabase ?? throw new ArgumentNullException(nameof(inventory));
             this.itemDatabase = itemDatabase ?? throw new ArgumentNullException(nameof(itemDatabase));
         }
 
@@ -56,7 +54,6 @@ namespace Game.Inventory
 
                     slotData.Quantity = item.Quantity;
 
-                    slotData.Durability = item.Durability;
 
                     for (int m = 0; m < item.Modifiers.Count; m++)
                     {
@@ -120,7 +117,6 @@ namespace Game.Inventory
                         slotData.InstanceId,
                         slotData.DefinitionId,
                         quantity
-                        // durability
                         );
 
                 List<ItemModifierInstance> modifiers = new();

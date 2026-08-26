@@ -13,7 +13,6 @@ namespace Game.Inventory
         readonly string definitionId;
 
         int quantity;
-
         /// <summary>
         /// Raised whenever mutable item state changes.
         /// </summary>
@@ -30,6 +29,7 @@ namespace Game.Inventory
         public string DefinitionId => definitionId;
 
         public int Quantity => quantity;
+
         // <summary>
         /// Creates a new runtime item instance.
         /// </summary>
@@ -48,6 +48,7 @@ namespace Game.Inventory
             this.definitionId = definitionId;
             this.quantity = quantity;
         }
+
 
         /// <summary>
         /// Restores a runtime item instance from persisted state.
@@ -94,4 +95,6 @@ namespace Game.Inventory
         {
             Changed?.Invoke(this);
         }
+
+    }
 }

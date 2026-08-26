@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace Game.Inventory
 {
@@ -17,7 +18,6 @@ namespace Game.Inventory
         public InventoryMutationService(Inventory inventory, ItemDatabase itemDatabase)
         {
             this.inventory = inventory ?? throw new ArgumentNullException(nameof(inventory));
-
             this.itemDatabase = itemDatabase ?? throw new ArgumentNullException(nameof(itemDatabase));
         }
 
@@ -161,17 +161,55 @@ namespace Game.Inventory
             {
                 return InventoryMutationResult.Failed(InventoryMutationFailure.EmptySlot);
             }
+            if (destination.IsEmpty)
+            {
+                return inventory.Move(sourceIndex, destinationIndex)
+                 ? InventoryMutationResult.Succeeded()
+                 : InventoryMutationResult.Failed(InventoryMutationFailure.OccupiedSlot);
+            }
+            // Destination is occupied
 
-            if (!destination.IsEmpty)
+            if (!itemDatabase.TryGet(destination.Item.DefinitionId, out ItemDefinition definition))
+            {
+                return InventoryMutationResult.Failed(InventoryMutationFailure.ItemNotFound);
+            }
+
+            // Destination contains an incompatible item.
+            if (!CanStack(source.Item, destination.Item, definition))
             {
                 return InventoryMutationResult.Failed(InventoryMutationFailure.OccupiedSlot);
             }
 
-            return inventory.Move(sourceIndex, destinationIndex)
-                ? InventoryMutationResult.Succeeded()
-                : InventoryMutationResult.Failed(InventoryMutationFailure.OccupiedSlot);
-        }
+            // Merge compatible stacks.
 
+            return MergeStacks(sourceIndex, source.Item, destination.Item, definition);
+        }
+        InventoryMutationResult MergeStacks(int sourceIndex, ItemInstance source, ItemInstance destination, ItemDefinition definition)
+        {
+            int available =                definition.MaxStackSize - destination.Quantity;
+
+            if (available <= 0)
+            {
+                return InventoryMutationResult.Failed(InventoryMutationFailure.StackFull);
+            }
+
+            int amount = Math.Min(available, source.Quantity);
+
+            int remaining = source.Quantity - amount;
+
+            destination.SetQuantity(destination.Quantity + amount);
+
+            if (remaining == 0)
+            {
+                inventory.RemoveAt(sourceIndex);
+            }
+            else
+            {
+                source.SetQuantity(remaining);
+            }
+
+            return InventoryMutationResult.Succeeded();
+        }
         /// <summary>
         /// Swaps two inventory slots atomically.
         /// </summary>
@@ -217,6 +255,7 @@ namespace Game.Inventory
             }
             if (!destination.IsEmpty)
             {
+                // Should check if same type of item before defaulting to failure.
                 return InventoryMutationResult.Failed(InventoryMutationFailure.OccupiedSlot);
             }
 

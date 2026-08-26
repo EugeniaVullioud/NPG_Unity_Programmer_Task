@@ -7,17 +7,19 @@ namespace Game.Player
     /// <summary>
     /// Persists player state as part of the global save system.
     /// </summary>
-    public sealed class PlayerSaveParticipant : ISaveParticipant
+    public sealed class PlayerTransformSaveParticipant : ISaveParticipant
     {
         readonly Transform playerTransform;
 
         /// <summary>
         /// Creates a player save participant.
         /// </summary>
-        public PlayerSaveParticipant(Transform playerTransform)
+        public PlayerTransformSaveParticipant(Transform playerTransform)
         {
             this.playerTransform = playerTransform;
         }
+
+        public string Id => "player_transform";
 
         /// <summary>
         /// Captures the player's position and rotation.

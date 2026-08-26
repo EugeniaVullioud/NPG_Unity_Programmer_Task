@@ -62,6 +62,42 @@ namespace Game.Inventory
             value = 0f;
             return false;
         }
+        #region Testing
+#if UNITY_INCLUDE_TESTS
+        public void SetIdForTesting(string id)
+        {
+            this.id = id;
+        }
+        public void SetStackSize(int max)
+        {
+            this.maxStackSize = max;
+        }
+#endif
+        #endregion
     }
 
+    /// <summary>
+    /// Defines the broad category of an item.
+    /// </summary>
+    public enum ItemCategory
+    {
+        Miscellaneous,
+        Weapon,
+        Armor,
+        Consumable,
+        Quest,
+        Material
+    }
+
+    /// <summary>
+    /// Defines item rarity.
+    /// </summary>
+    public enum ItemRarity
+    {
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary
+    }
 }

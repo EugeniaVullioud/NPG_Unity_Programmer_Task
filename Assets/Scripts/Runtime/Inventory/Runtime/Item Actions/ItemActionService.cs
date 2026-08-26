@@ -9,12 +9,10 @@ namespace Game.Inventory
     public sealed class ItemActionService
     {
         readonly Inventory inventory;
-        readonly InventoryMutationService mutationService;
         readonly ItemDatabase itemDatabase;
 
         readonly List<IItemUseHandler> handlers;
 
-        public ItemActionService(Inventory inventory, InventoryMutationService mutationService, ItemDatabase itemDatabase, IEnumerable<IItemUseHandler> handlers = null)
         {
             this.inventory = inventory ?? throw new ArgumentNullException(nameof(inventory));
             this.mutationService = mutationService ?? throw new ArgumentNullException(nameof(mutationService));

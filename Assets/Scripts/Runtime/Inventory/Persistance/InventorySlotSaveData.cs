@@ -29,14 +29,5 @@ namespace Game.Inventory
         /// </summary>
         public int Quantity;
 
-        /// <summary>
-        /// Current durability.
-        /// </summary>
-        public float Durability;
-
-        /// <summary>
-        /// Persisted modifiers.
-        /// </summary>
-        public List<ItemModifierSaveData> Modifiers = new();
     }
 }
