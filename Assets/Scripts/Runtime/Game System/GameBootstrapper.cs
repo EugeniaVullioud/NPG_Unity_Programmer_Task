@@ -1,8 +1,9 @@
 using Game.Inventory;
 using Game.SaveSystem;
+using System;
 using UnityEngine;
 
-public class GameBootstapper : MonoBehaviour
+public class GameBootstrapper: MonoBehaviour
 {
     [Header("Definitions")]
     [SerializeField] ItemDatabase itemDatabase;
@@ -20,7 +21,6 @@ public class GameBootstapper : MonoBehaviour
     /// Gets the composed inventory system.
     /// </summary>
     public InventorySystem InventorySystem { get; private set; }
-
 
     void Awake()
     {
@@ -42,7 +42,7 @@ public class GameBootstapper : MonoBehaviour
         InventorySystem.Initialize();
     }
 
-    private bool ValidateConfiguration()
+    bool ValidateConfiguration()
     {
         if (itemDatabase == null)
         {
