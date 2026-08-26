@@ -6,6 +6,11 @@ namespace Game.SaveSystem
     public interface ISaveParticipant
     {
         /// <summary>
+        /// Gets the unique identifier of the save participant.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
         /// Writes the current system state into the supplied save container.
         /// </summary>
         void Capture(SaveData saveData);

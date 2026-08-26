@@ -26,5 +26,23 @@ namespace Game.SaveSystem
         /// Persisted inventory state.
         /// </summary>
         public InventorySaveData Inventory = new();
+
+        /// <summary>
+        /// Equipment state.
+        /// </summary>
+        public EquipmentSaveData Equipment;
+
+        /// <summary>
+        /// Creates an empty save.
+        /// </summary>
+        public static SaveData Create()
+        {
+            return new SaveData
+            {
+                Version = 1,
+                Inventory = new InventorySaveData(),
+                Equipment = new EquipmentSaveData()
+            };
+        }
     }
 }
