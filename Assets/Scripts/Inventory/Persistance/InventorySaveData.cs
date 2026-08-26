@@ -9,6 +9,8 @@ namespace Game.Inventory
     [Serializable]
     public sealed class InventorySaveData
     {
+        public int Version = 1;
+
         /// <summary>
         /// Number of inventory slots.
         /// </summary>

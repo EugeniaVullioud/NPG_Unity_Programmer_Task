@@ -1,4 +1,5 @@
 using Game.SaveSystem;
+using System;
 using UnityEngine;
 
 namespace Game.Player
@@ -39,13 +40,21 @@ namespace Game.Player
         /// <summary>
         /// Restores the player's position and rotation.
         /// </summary>
-        public void Restore(SaveData saveData)
+        public bool Restore(SaveData saveData)
         {
+            if (saveData == null || saveData.Player == null)
+            {
+                throw new ArgumentNullException(nameof(saveData));
+            }
+
             PlayerSaveData data = saveData.Player;
+
 
             playerTransform.SetPositionAndRotation(
                 new Vector3(data.PositionX, data.PositionY, data.PositionZ),
                 new Quaternion(data.RotationX, data.RotationY, data.RotationZ, data.RotationW));
+
+            return true;
         }
     }
 }

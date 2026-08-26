@@ -133,9 +133,7 @@ namespace Game.Inventory
             return true;
         }
 
-        internal bool Swap(
-            int firstIndex,
-            int secondIndex)
+        internal bool Swap(int firstIndex, int secondIndex)
         {
             ValidateSlotIndex(firstIndex);
             ValidateSlotIndex(secondIndex);

@@ -8,6 +8,8 @@ namespace Game.SaveSystem
     [Serializable]
     public sealed class PlayerSaveData
     {
+        public int Version = 1;
+
         public float PositionX;
         public float PositionY;
         public float PositionZ;

@@ -1,4 +1,3 @@
-using UnityEditor.Overlays;
 namespace Game.SaveSystem
 {
     /// <summary>
@@ -14,6 +13,6 @@ namespace Game.SaveSystem
         /// <summary>
         /// Restores system state from the supplied save container.
         /// </summary>
-        void Restore(SaveData saveData);
+        bool Restore(SaveData saveData);
     }
 }
