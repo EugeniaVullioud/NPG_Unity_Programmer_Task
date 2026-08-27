@@ -20,6 +20,6 @@ namespace Game.Items
         /// Picks up this object using the specified context.
         /// </summary>
         /// <param name="context">The context in which the pickup is performed.</param>
-        void PickUp(in PickupContext context);
+        bool TryPickUp(in PickupContext context);
     }
 }

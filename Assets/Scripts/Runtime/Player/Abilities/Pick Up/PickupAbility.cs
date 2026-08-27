@@ -14,10 +14,13 @@ namespace Game.Character
 
         readonly IPickupDetector _detector;
         readonly IPickupSelector _selector;
+        public override AbilityId Id => AbilityId.Pickup;
+
+        // Runtime
         readonly List<PickupCandidate> _candidates = new();
+        IPickupSelectionFeedback _selectedFeedback;
 
         float _nextAvailableTime;
-        public override AbilityId Id => AbilityId.Pickup;
 
         public PickupAbility(Transform character, IPickupDetector detector, IPickupSelector selector, Transform origin, PickupAbilitySettings settings, bool initiallyUnlocked) : base(initiallyUnlocked)
         {
@@ -43,9 +46,7 @@ namespace Game.Character
 
             PickupContext context = new PickupContext(_character);
 
-            if (!candidate.Pickupable.CanBePickedUp(in context)) return;
-
-            candidate.Pickupable.PickUp(in context);
+            if (!candidate.Pickupable.TryPickUp(in context)) return;
 
             _nextAvailableTime = Time.time + _settings.Cooldown;
         }
@@ -54,13 +55,43 @@ namespace Game.Character
         {
             // Could be improved by only firing when player has significantly moved, or it could also have a DetectionInterval = 0.05f;
             // which means doing detection at 20 Hz. But it's overcomplicating a solution. 
-            if (!IsUnlocked) return;
+            if (!IsUnlocked)
+            {
+                ClearSelection();
+                return;
+            }
 
             Vector3 origin = _origin.position;
             Vector3 forward = _character.forward;
 
             _detector.Detect(origin, forward, _candidates);
 
+            UpdateSelection();
+        }
+        void UpdateSelection()
+        {
+            if (!_selector.TrySelect(_candidates, out PickupCandidate candidate))
+            {
+                ClearSelection();
+                return;
+            }
+
+            IPickupSelectionFeedback feedback = candidate.Pickupable as IPickupSelectionFeedback;
+
+            if (ReferenceEquals(feedback, _selectedFeedback)) return;
+
+            ClearSelection();
+
+            _selectedFeedback = feedback;
+            _selectedFeedback?.SetSelected(true);
+        }
+
+        void ClearSelection()
+        {
+            if (_selectedFeedback == null) return;
+
+            _selectedFeedback.SetSelected(false);
+            _selectedFeedback = null;
         }
     }
 }

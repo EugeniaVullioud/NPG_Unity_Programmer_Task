@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 
 namespace Game.Inventory
 {
@@ -18,6 +17,7 @@ namespace Game.Inventory
         public InventoryMutationService(Inventory inventory, ItemDatabase itemDatabase)
         {
             this.inventory = inventory ?? throw new ArgumentNullException(nameof(inventory));
+
             this.itemDatabase = itemDatabase ?? throw new ArgumentNullException(nameof(itemDatabase));
         }
 

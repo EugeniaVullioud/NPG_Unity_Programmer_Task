@@ -45,5 +45,10 @@ namespace Game.Inventory
 
             Equipment = equipment ?? throw new ArgumentNullException(nameof(equipment));
         }
+
+        public InventoryMutationResult Add(ItemInstance item, out int index)
+        {
+            return Mutation.Add(item, out index);
+        }
     }
 }

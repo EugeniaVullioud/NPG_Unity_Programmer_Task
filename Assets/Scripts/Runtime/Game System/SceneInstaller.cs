@@ -1,15 +1,21 @@
 using Game.Inventory;
+using Game.Items;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Composes scene-local dependencies using application-level systems
-/// created by the GameBootstrapper.
+/// Composes scene-local dependencies using application-level systems created by the GameBootstrapper.
 /// </summary>
 public sealed class SceneInstaller : MonoBehaviour
 {
     [Header("Scene UI")]
     [SerializeField] InventoryUI inventoryUI;
     [SerializeField] GameBootstrapper bootstrapper;
+
+    [Header("Scene Pickups")]
+    [SerializeField] List<WorldItemPickup> pickups = new();
+
+    ItemInstanceFactory itemFactory;
 
     void Start()
     {
@@ -26,6 +32,7 @@ public sealed class SceneInstaller : MonoBehaviour
         }
 
         Install(bootstrapper.InventorySystem);
+        InitializeItems(bootstrapper.InventorySystem);
     }
 
     void Install(InventorySystem inventorySystem)
@@ -37,6 +44,19 @@ public sealed class SceneInstaller : MonoBehaviour
         }
 
         inventoryUI.Initialize(inventorySystem);
+    }
+    void InitializeItems(InventorySystem inventorySystem)
+    {
+        itemFactory = new ItemInstanceFactory();
+        IPickupInventoryReceiver receiver = new InventoryServicePickupReceiver(inventorySystem.Service);
+
+        var operation = new PickupItemOperation(receiver, itemFactory);
+        foreach (WorldItemPickup pickup in pickups)
+        {
+            if (pickup == null) continue;
+
+            pickup.Initialize(operation);
+        }
     }
 
 }
