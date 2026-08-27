@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be6b29b13d7e30041906ee90adcf6127, type: 3}
-  m_Name: SO_ItemDatabase
-  m_EditorClassIdentifier: AD_Runtime::Game.Inventory.ItemDatabase
-  definitions:
-  - {fileID: 0}
-  - {fileID: 0}
+  m_Script: {fileID: 11500000, guid: ee51fb4af6541ec4d9360794ca74ccf6, type: 3}
+  m_Name: SO_ItemModifierDatabase
+  m_EditorClassIdentifier: AD_Runtime::Game.Inventory.ItemModifierDatabase
+  definitions: []
