@@ -21,8 +21,8 @@ namespace Game.Character
         /// </summary>
         void FixedUpdate()
         {
-            CharacterCommand command = _inputReader.CurrentCommand;
-            _motor.SetCommand(_inputReader.CurrentCommand);
+            CharacterCommand command =  _inputReader.ConsumeCommand();
+            _motor.SetCommand(command);
 
             _motor.EvaluateGround();
 

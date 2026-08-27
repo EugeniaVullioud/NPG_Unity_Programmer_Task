@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 887ab0b4b409d3f489436ad1faa96386, type: 3}
   m_Name: SO_ThirdPersonCameraSettings
   m_EditorClassIdentifier: AD_Runtime::Game.Camera.ThirdPersonCameraSettings
-  _minimumDistance: 1
-  _maximumDistance: 6
+  _minimumDistance: 0.2
+  _maximumDistance: 4
   _minimumPitch: -70
   _maximumPitch: 75
   _collisionRadius: 0.35

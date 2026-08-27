@@ -11,7 +11,6 @@ namespace Game.Camera
         [SerializeField] CameraInputReader _inputReader;
         [SerializeField] ThirdPersonCameraController _cameraController;
 
-
         bool _initialized;
 
         void Awake()
@@ -62,13 +61,10 @@ namespace Game.Camera
 
         /// <summary>
         /// Supplies an abstract camera command directly.
-        ///
         /// Useful for AI, cutscenes, replays, tests, or alternative input systems.
         /// </summary>
         public void SetCommand(in CameraCommand command)
         {
-            if (!_initialized) Initialize();
-
             if (_cameraController == null) return;
 
             _cameraController.SetCommand(command);
@@ -79,8 +75,6 @@ namespace Game.Camera
         /// </summary>
         public CameraCommand GetCommand()
         {
-            if (!_initialized) Initialize();
-
             if (_inputReader == null) return default;
 
             return _inputReader.GetCommand();

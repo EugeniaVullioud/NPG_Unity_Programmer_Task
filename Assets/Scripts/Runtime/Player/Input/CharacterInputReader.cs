@@ -15,11 +15,6 @@ namespace Game.Character
         bool _pickupPressed;
 
         /// <summary>
-        /// Gets the current character command constructed from the latest input.
-        /// </summary>
-        public CharacterCommand CurrentCommand => new CharacterCommand(_moveInput, _jumpPressed, _pickupPressed);
-
-        /// <summary>
         /// Enables the configured input actions and subscribes to their callbacks.
         /// </summary>
         void OnEnable()
@@ -56,19 +51,13 @@ namespace Game.Character
             _pickupPressed = false;
         }
 
-        void LateUpdate()
-        {
-            _jumpPressed = false;
-            _pickupPressed = false;
-        }
-
         /// <summary>
         /// Returns the latest command and consumes one-frame action presses.
         /// Movement remains continuous while actions such as jump are edge-triggered.
         /// </summary>
         public CharacterCommand ConsumeCommand()
         {
-            CharacterCommand command = new(                _moveInput,                _jumpPressed,                _pickupPressed);
+            CharacterCommand command = new(_moveInput, _jumpPressed, _pickupPressed);
 
             _jumpPressed = false;
             _pickupPressed = false;
