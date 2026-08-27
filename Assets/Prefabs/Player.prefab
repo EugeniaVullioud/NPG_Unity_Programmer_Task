@@ -150,6 +150,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: AD_Runtime::Game.Character.CharacterAbilityInstaller
   _characterMotor: {fileID: 8678282910409946404}
   _startupSettings: {fileID: 11400000, guid: 9d83db26a2520db4ab5ff877347ed0f2, type: 2}
+  _detectionSettings: {fileID: 11400000, guid: 40c60d1900c2e8e4f90d350500fab01c, type: 2}
+  _selectionSettings: {fileID: 11400000, guid: 2cd7e066e342abb448446b55fd935ff1, type: 2}
   _pickupSettings: {fileID: 11400000, guid: f40c44c980ef1f845a1d9bcddd79b770, type: 2}
   _jumpSettings: {fileID: 11400000, guid: 1f2668da115f21143a5f90788a4044a2, type: 2}
   _pickupOrigin: {fileID: 4490482312828844892}

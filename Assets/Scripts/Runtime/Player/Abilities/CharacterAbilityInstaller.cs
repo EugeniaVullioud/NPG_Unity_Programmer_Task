@@ -1,3 +1,4 @@
+using Game.Items;
 using UnityEngine;
 namespace Game.Character
 {
@@ -13,6 +14,8 @@ namespace Game.Character
 
         [Header("Startup")]
         [SerializeField] CharacterAbilityStartupSettings _startupSettings;
+        [SerializeField] ItemDetectionStrategy _detectionSettings;
+        [SerializeField] ItemSelectorStrategy _selectionSettings;
 
 
         [Header("Ability Settings")]
@@ -47,7 +50,10 @@ namespace Game.Character
         void InstallPickupAbility()
         {
             bool initiallyUnlocked = IsInitiallyUnlocked(AbilityId.Pickup);
-            _pickupAbility = new PickupAbility(transform, _pickupOrigin, _pickupSettings, initiallyUnlocked);
+
+            var detector = _detectionSettings.Create();
+            var selector = _selectionSettings.Create();
+            _pickupAbility = new PickupAbility(transform, detector, selector, _pickupOrigin, _pickupSettings, initiallyUnlocked);
             _abilityController.Register(_pickupAbility);
         }
         /// <summary>

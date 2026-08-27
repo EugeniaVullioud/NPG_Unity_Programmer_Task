@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 698da93064f4e9b4b8dc86ef778700b6, type: 3}
+  m_Name: SO_ItemDetectionStrategy
+  m_EditorClassIdentifier: AD_Runtime::Game.Items.ItemDetectionStrategy
+  _settings: {fileID: 11400000, guid: f40c44c980ef1f845a1d9bcddd79b770, type: 2}
+  _type: 0
