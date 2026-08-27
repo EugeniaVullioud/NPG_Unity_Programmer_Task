@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ede67907f331a6548b8723ff8009fb70, type: 3}
   m_Name: SO_PickupAbilitySettings
   m_EditorClassIdentifier: AD_Runtime::Game.Character.PickupAbilitySettings
-  _range: 2
-  _radius: 0.35
+  _range: 4
   _maximumAngle: 60
   _pickupMask:
     serializedVersion: 2
     m_Bits: 128
   _cooldown: 0.15
+  _maxDetectionColliders: 15

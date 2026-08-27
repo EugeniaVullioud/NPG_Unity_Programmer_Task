@@ -15,12 +15,12 @@ MonoBehaviour:
   id: b1
   displayName: Pale Ale
   description: The softest friend.
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: a045c6ddd6b2af54eb7f27331792ce6f, type: 3}
   category: 4
   rarity: 0
   tags: []
-  maxStackSize: 3
-  equippable: 0
+  maxStackSize: 5
+  equippable: 1
   hasDurability: 0
   maximumDurability: 100
   baseStats: []

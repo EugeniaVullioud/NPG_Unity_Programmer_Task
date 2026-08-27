@@ -15,11 +15,11 @@ MonoBehaviour:
   id: b2
   displayName: IPA
   description: The softest friend.
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 0145814ba80841a4a9e4a95d9dca33a0, type: 3}
   category: 4
   rarity: 1
   tags: []
-  maxStackSize: 2
+  maxStackSize: 1
   equippable: 0
   hasDurability: 0
   maximumDurability: 100

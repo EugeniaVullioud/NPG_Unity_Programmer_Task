@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: SO_ItemDatabase
   m_EditorClassIdentifier: AD_Runtime::Game.Inventory.ItemDatabase
   definitions:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: dd30c4a12e40c6a47920721d353e1f39, type: 2}
+  - {fileID: 11400000, guid: 3b83dc406ea93c343a0c9777eb912d80, type: 2}

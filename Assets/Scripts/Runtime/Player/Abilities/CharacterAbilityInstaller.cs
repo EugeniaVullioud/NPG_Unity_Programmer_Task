@@ -1,4 +1,5 @@
 using Game.Items;
+using UnityEditor;
 using UnityEngine;
 namespace Game.Character
 {
@@ -8,7 +9,7 @@ namespace Game.Character
     public sealed class CharacterAbilityInstaller : MonoBehaviour
     {
         CharacterAbilityController _abilityController;
-        public CharacterAbilityController AbilityController =>_abilityController;
+        public CharacterAbilityController AbilityController => _abilityController;
 
         [SerializeField] CharacterMotor _characterMotor;
 
@@ -83,5 +84,60 @@ namespace Game.Character
                 ability.Lock();
             }
         }
+
+
+#if UNITY_EDITOR
+
+        void OnDrawGizmosSelected()
+        {
+            if (_pickupSettings == null || _pickupOrigin == null) return;
+
+            Vector3 origin = _pickupOrigin.position;
+            Vector3 forward = _pickupOrigin.forward;
+
+            float range = _pickupSettings.Range;
+            float maximumAngle = _pickupSettings.MaximumAngle;
+
+            // Pickup range
+
+            Handles.color = new Color(0f, 1f, 0f, 0.15f);
+
+            Handles.DrawSolidDisc(origin, Vector3.up, range);
+
+            Handles.color = Color.green;
+
+            Handles.DrawWireDisc(origin, Vector3.up, range);
+
+            // Forward direction
+
+            Gizmos.color = Color.black;
+
+            Gizmos.DrawLine(origin, origin + forward * range);        
+
+            // Angle boundaries
+
+            Vector3 leftDirection = Quaternion.AngleAxis(-maximumAngle, Vector3.up) * forward;
+            Vector3 rightDirection = Quaternion.AngleAxis(maximumAngle, Vector3.up) * forward;
+
+            Gizmos.color = Color.cyan;
+
+            Gizmos.DrawLine(origin, origin + leftDirection * range);
+            Gizmos.DrawLine(origin, origin + rightDirection * range);
+
+            // Angle arc
+
+            Handles.color = Color.cyan;
+
+            Handles.DrawWireArc(origin, Vector3.up, leftDirection, maximumAngle * 2f, range);
+
+            // Labels
+
+            Handles.color = Color.white;
+
+            Handles.Label(origin + forward * (range * 0.5f), $"Pickup Range: {range:0.00}");
+            Handles.Label(origin + forward * range * 0.75f, $"Angle: {maximumAngle:0}°");
+        }
+
+#endif
     }
 }

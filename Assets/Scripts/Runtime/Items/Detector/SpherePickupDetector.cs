@@ -36,7 +36,7 @@ namespace Game.Items
             results.Clear();
             _uniquePickupables.Clear();
 
-            int hitCount = Physics.OverlapSphereNonAlloc(origin, _settings.Radius, _colliders, _settings.PickupMask, QueryTriggerInteraction.Collide);
+            int hitCount = Physics.OverlapSphereNonAlloc(origin, _settings.Range, _colliders, _settings.PickupMask, QueryTriggerInteraction.Collide);
 
             for (int i = 0; i < hitCount; i++)
             {
@@ -44,7 +44,7 @@ namespace Game.Items
 
                 IPickupable pickupable = collider.GetComponentInParent<IPickupable>();
 
-                if (pickupable == null) continue;
+                if (pickupable == null || !collider.enabled) continue;
 
                 if (!_uniquePickupables.Add(pickupable)) continue;
 

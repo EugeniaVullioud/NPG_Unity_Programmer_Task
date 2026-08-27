@@ -1,3 +1,4 @@
+using Game.Camera;
 using Game.Inventory;
 using System;
 using UnityEngine;
@@ -14,15 +15,20 @@ namespace Game.Items
             Available,
             Consumed
         }
+        [Header("Detection")]
+        [SerializeField] Collider[] _colliders;
 
-        [Header("Item")][SerializeField] ItemDefinition itemDefinition;
+        [Header("Item")]
+        [SerializeField] ItemDefinition itemDefinition;
 
         [Min(1)][SerializeField] int quantity = 1;
 
         [Header("World")][SerializeField] GameObject worldRepresentation;
 
         [Header("Feedback")]
-        [SerializeField] IWorldPickupFeedback feedback;
+        [SerializeField] Transform _feedbackProvider;
+
+        IWorldPickupFeedback feedback;
 
         PickupState _state = PickupState.Available;
 
@@ -32,6 +38,11 @@ namespace Game.Items
 
         public PickupState State => _state;
 
+        void Awake()
+        {
+            feedback = _feedbackProvider.GetComponentInChildren<IWorldPickupFeedback>();
+            if (feedback == null ) throw new ArgumentNullException(nameof(feedback));
+        }
         /// <summary>
         /// Installs application dependencies. This is intentionally explicit rather than looking up a global InventorySystem from the pickup.
         /// </summary>
@@ -64,18 +75,25 @@ namespace Game.Items
         {
             // Set state before disabling anything. This makes repeated interaction attempts harmless even if disabling causes other callbacks to run.
             _state = PickupState.Consumed;
-
+            EnableCollision(false);
             feedback?.ResetFeedback();
 
             if (worldRepresentation != null) worldRepresentation.SetActive(false);
             else gameObject.SetActive(false);
         }
-
+        void EnableCollision(bool state)
+        {
+            foreach (var collider in _colliders)
+            {
+                collider.enabled = state;
+            }
+        }
         void OnDisable()
         {
             // If the pickup is disabled for any reason, make sure visual
             // feedback cannot remain applied when it is later re-enabled.
             feedback?.ResetFeedback();
+            EnableCollision(true);
         }
 
 #if UNITY_EDITOR
