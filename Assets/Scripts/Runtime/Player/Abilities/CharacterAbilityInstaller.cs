@@ -24,7 +24,7 @@ namespace Game.Character
         PickupAbility _pickupAbility;
         JumpAbility _jumpAbility;
 
-        void Awake()
+        void Start()
         {
             _abilityController = new CharacterAbilityController();
 

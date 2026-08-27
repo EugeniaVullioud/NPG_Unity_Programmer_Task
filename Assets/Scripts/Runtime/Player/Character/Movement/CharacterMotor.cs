@@ -1,3 +1,4 @@
+using Game.Camera;
 using UnityEngine;
 
 namespace Game.Character
@@ -10,8 +11,9 @@ namespace Game.Character
     {
         [Header("References")]
         [SerializeField] Rigidbody _rigidbody;
+        [SerializeField] Transform _camOrientationProvider;
 
-        [SerializeField] Transform _cameraTransform;
+        ICameraOrientationProvider _orientationProvider;
 
         [SerializeField] Transform _groundProbeOrigin;
 
@@ -40,7 +42,13 @@ namespace Game.Character
         void Awake()
         {
             if (_rigidbody == null) _rigidbody = GetComponent<Rigidbody>();
+            _orientationProvider =   _camOrientationProvider. GetComponentInChildren<ICameraOrientationProvider>();
 
+            if (_orientationProvider == null)
+            {
+                Debug.LogError($"{name}: Assigned camera orientation provider does not implement ICameraOrientationProvider.", this);
+                return;
+            }
             _groundProvider = new SphereGroundProbe(_groundProbeOrigin, _groundSettings);
 
             ConfigureRigidbody();
@@ -50,7 +58,7 @@ namespace Game.Character
             _groundProvider.Evaluate();
         }
 
-        public void SimulateMovement(            float deltaTime)
+        public void SimulateMovement(float deltaTime)
         {
 
             ResolveMovementDirection();
@@ -81,14 +89,17 @@ namespace Game.Character
         /// </summary>
         void ResolveMovementDirection()
         {
-            if (_cameraTransform == null)
-            {
-                _desiredWorldDirection = new Vector3(_command.Move.x, 0f, _command.Move.y);
-                _desiredWorldDirection = Vector3.ClampMagnitude(_desiredWorldDirection, 1f);
-                return;
-            }
+            Vector3 forward = _orientationProvider.PlanarForward;
 
-            _desiredWorldDirection = CameraRelativeMovementResolver.Resolve(_command.Move, _cameraTransform, transform.forward);
+            Vector3 right = _orientationProvider.PlanarRight;
+
+            Vector3 movement = forward * _command.Move.y + right * _command.Move.x;
+
+            if (movement.sqrMagnitude > 1f)
+            {
+                movement.Normalize();
+            }
+            _desiredWorldDirection = movement;
         }
         /// <summary>
         /// Calculates and applies the character's horizontal movement while preserving vertical velocity.
