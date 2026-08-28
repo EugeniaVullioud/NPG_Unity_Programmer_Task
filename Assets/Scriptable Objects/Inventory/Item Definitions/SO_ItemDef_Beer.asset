@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: AD_Runtime::Game.Inventory.ItemDefinition
   id: b1
   displayName: Pale Ale
-  description: The softest friend.
+  description: The softest friend. Press R to drink.
   icon: {fileID: 21300000, guid: a045c6ddd6b2af54eb7f27331792ce6f, type: 3}
-  category: 4
+  category: 3
   rarity: 0
-  tags: []
   maxStackSize: 5
   equippable: 1
   hasDurability: 0

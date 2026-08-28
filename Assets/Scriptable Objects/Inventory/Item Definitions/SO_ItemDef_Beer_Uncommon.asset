@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: AD_Runtime::Game.Inventory.ItemDefinition
   id: b2
   displayName: IPA
-  description: The softest friend.
+  description: The extroverted friend. Press R to drink.
   icon: {fileID: 21300000, guid: 0145814ba80841a4a9e4a95d9dca33a0, type: 3}
-  category: 4
+  category: 3
   rarity: 1
-  tags: []
   maxStackSize: 1
   equippable: 0
   hasDurability: 0
