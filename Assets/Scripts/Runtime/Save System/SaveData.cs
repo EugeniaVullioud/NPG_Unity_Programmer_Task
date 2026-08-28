@@ -1,6 +1,5 @@
 using Game.Inventory;
 using System;
-using UnityEngine;
 
 namespace Game.SaveSystem
 {
@@ -16,6 +15,11 @@ namespace Game.SaveSystem
         /// Used for future migration support.
         /// </summary>
         public int Version = 1;
+
+        /// <summary>
+        /// Metadata describing this save.
+        /// </summary>
+        public SaveMetadata Metadata = new();
 
         /// <summary>
         /// Persisted player state.
@@ -40,6 +44,8 @@ namespace Game.SaveSystem
             return new SaveData
             {
                 Version = 1,
+                Metadata = new SaveMetadata(),
+                Player= new PlayerSaveData(),
                 Inventory = new InventorySaveData(),
                 Equipment = new EquipmentSaveData()
             };

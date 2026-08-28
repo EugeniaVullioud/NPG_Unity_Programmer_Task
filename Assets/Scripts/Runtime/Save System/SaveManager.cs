@@ -16,19 +16,19 @@ namespace Game.SaveSystem
         const int CurrentVersion = 1;
 
         readonly Dictionary<string, ISaveParticipant> participants = new(StringComparer.Ordinal);
+
         readonly string rootPath;
 
-        /// <summary>
-        /// Creates a save manager using Unity's persistent data directory.
-        /// </summary>
         public SaveManager(string directoryName = "Saves")
         {
+            if (string.IsNullOrWhiteSpace(directoryName))
+            {
+                throw new ArgumentException("Save directory name cannot be empty.", nameof(directoryName));
+            }
             rootPath = Path.Combine(Application.persistentDataPath, directoryName);
             Directory.CreateDirectory(rootPath);
         }
-        /// <summary>
-        /// Registers a save participant.
-        /// </summary>
+
         public void Register(ISaveParticipant participant)
         {
             if (participant == null) throw new ArgumentNullException(nameof(participant));
@@ -45,56 +45,137 @@ namespace Game.SaveSystem
         /// <summary>
         /// Saves all registered systems to a save slot.
         /// </summary>
-        public void Save(string slotId)
+        public SaveOperationResult Save(string slotId)
         {
-            if (string.IsNullOrWhiteSpace(slotId))
+            if (!TryValidateSlotId(slotId, out SaveOperationResult validationResult))
             {
-                throw new ArgumentException("Save slot cannot be empty.", nameof(slotId));
+                return validationResult;
             }
 
-            SaveData saveData = SaveData.Create();
-
-            saveData.Version = CurrentVersion;
-
-            foreach (ISaveParticipant participant in participants.Values)
+            try
             {
-                participant.Capture(saveData);
+                SaveData saveData = SaveData.Create();
+                saveData.Version = CurrentVersion;
+
+                PopulateMetadata(saveData);
+
+                foreach (ISaveParticipant participant in participants.Values)
+                {
+                    participant.Capture(saveData);
+                }
+
+                string json = JsonUtility.ToJson(saveData, false);
+
+                string path = GetSlotPath(slotId);
+
+                if (!WriteAtomic(path, json))
+                {
+                    return SaveOperationResult.Failed(SaveOperationFailureReason.WriteFailed, $"Failed to write save slot '{slotId}'.");
+                }
+
+                return SaveOperationResult.Succeeded();
             }
+            catch (Exception exception)
+            {
+                Debug.LogError($"Failed to save slot '{slotId}': {exception}");
 
-            string json = JsonUtility.ToJson(saveData, false);
-
-            string path = GetSlotPath(slotId);
-
-            WriteAtomic(path, json);
+                return SaveOperationResult.Failed(SaveOperationFailureReason.WriteFailed, exception.Message);
+            }
         }
+        void PopulateMetadata(SaveData saveData)
+        {
+            saveData.Metadata.DisplayName = "Save Game";
 
+            saveData.Metadata.SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+            saveData.Metadata.LastModifiedTicks = DateTime.UtcNow.Ticks;
+
+            saveData.Metadata.PlaytimeSeconds = 0f;
+        }
         /// <summary>
         /// Loads all registered systems from a save slot.
         /// </summary>
-        public bool Load(string slotId)
+        public SaveOperationResult Load(string slotId)
         {
+            if (!TryValidateSlotId(slotId, out SaveOperationResult validationResult))
+            {
+                return validationResult;
+            }
+
             string path = GetSlotPath(slotId);
-            if (!File.Exists(path)) return false;
+
+            if (!File.Exists(path))
+            {
+                return SaveOperationResult.Failed(SaveOperationFailureReason.SlotNotFound, $"Save slot '{slotId}' does not exist.");
+            }
 
             try
             {
                 string json = File.ReadAllText(path);
 
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    return SaveOperationResult.Failed(SaveOperationFailureReason.InvalidData, $"Save slot '{slotId}' is empty.");
+                }
+
                 SaveData saveData = JsonUtility.FromJson<SaveData>(json);
 
-                if (saveData == null || saveData.Version > CurrentVersion) return false;
+                if (saveData == null)
+                {
+                    return SaveOperationResult.Failed(SaveOperationFailureReason.InvalidData, $"Save slot '{slotId}' contains invalid save data.");
+                }
+
+                if (saveData.Version > CurrentVersion)
+                {
+                    return SaveOperationResult.Failed(SaveOperationFailureReason.InvalidData, $"Save slot '{slotId}' uses unsupported save version {saveData.Version}.");
+                }
 
                 foreach (ISaveParticipant participant in participants.Values)
                 {
-                    participant.Restore(saveData);
+                    if (!participant.Restore(saveData))
+                    {
+                        return SaveOperationResult.Failed(SaveOperationFailureReason.InvalidData, $"Participant '{participant.Id}' failed to restore.");
+                    }
                 }
 
-                return true;
+                return SaveOperationResult.Succeeded();
             }
             catch (Exception exception)
             {
-                Debug.LogError($"Failed to load save slot {slotId}: {exception}");
-                return false;
+                Debug.LogError($"Failed to load save slot '{slotId}': {exception}");
+
+                return SaveOperationResult.Failed(SaveOperationFailureReason.ReadFailed, exception.Message);
+            }
+        }
+
+        /// <summary>
+        /// Deletes a save slot.
+        /// </summary>
+        public SaveOperationResult Delete(string slotId)
+        {
+            if (!TryValidateSlotId(slotId, out SaveOperationResult validationResult))
+            {
+                return validationResult;
+            }
+
+            string path = GetSlotPath(slotId);
+
+            if (!File.Exists(path))
+            {
+                return SaveOperationResult.Failed(SaveOperationFailureReason.SlotNotFound, $"Save slot '{slotId}' does not exist.");
+            }
+
+            try
+            {
+                File.Delete(path);
+
+                return SaveOperationResult.Succeeded();
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError($"Failed to delete save slot '{slotId}': {exception}");
+
+                return SaveOperationResult.Failed(SaveOperationFailureReason.WriteFailed, exception.Message);
             }
         }
 
@@ -103,14 +184,70 @@ namespace Game.SaveSystem
         /// </summary>
         public bool Exists(string slotId)
         {
+            if (string.IsNullOrWhiteSpace(slotId)) return false;
             return File.Exists(GetSlotPath(slotId));
         }
 
-        string GetSlotPath(string slotId)
+        /// <summary>
+        /// Gets the last modification time of a save slot.
+        /// </summary>
+        public bool TryGetLastModified(string slotId, out DateTime lastModified)
+        {
+            lastModified = default;
+
+            if (!Exists(slotId)) return false;
+
+            try
+            {
+                lastModified = File.GetLastWriteTime(GetSlotPath(slotId));
+
+                return true;
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError($"Failed to read modification time for save slot '{slotId}': {exception}");
+
+                return false;
+            }
+        }
+
+        bool TryValidateSlotId(string slotId, out SaveOperationResult result)
+        {
+            if (string.IsNullOrWhiteSpace(slotId))
+            {
+                result = SaveOperationResult.Failed(SaveOperationFailureReason.InvalidOperation, "Save slot cannot be empty.");
+                return false;
+            }
+
+            result = default;
+            return true;
+        }
+
+        public bool TryReadSaveData(string path, out SaveData saveData)
+        {
+            saveData = null;
+
+            try
+            {
+                string json = File.ReadAllText(path);
+
+                saveData = JsonUtility.FromJson<SaveData>(json);
+
+                if (saveData == null || saveData.Version > CurrentVersion) return false;
+
+                return true;
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError($"Failed to read save file '{path}': {exception}");
+
+                return false;
+            }
+        }
+        public string GetSlotPath(string slotId)
         {
             return Path.Combine(rootPath, SanitizeSlotId(slotId) + ".json");
         }
-
         /// <summary>
         /// Replaces characters that are invalid in file names with underscores.
         /// </summary>
