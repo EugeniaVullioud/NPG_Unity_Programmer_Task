@@ -12,12 +12,10 @@ namespace Game.Inventory
         readonly Inventory inventory;
 
         string selectedInstanceId;
+        int selectedSlotIndex;
 
-        /// <summary>
-        /// Gets the instance ID of the currently selected item,
-        /// or null when nothing is selected.
-        /// </summary>
         public string SelectedInstanceId => selectedInstanceId;
+        public int SelectedSlotIndex => selectedSlotIndex;
 
         /// <summary>
         /// Gets whether an item is currently selected.
@@ -57,6 +55,7 @@ namespace Game.Inventory
             }
 
             selectedInstanceId = instanceId;
+            selectedSlotIndex = slotIndex; 
             SelectionChanged?.Invoke();
 
             return true;
@@ -72,6 +71,7 @@ namespace Game.Inventory
                 return;
             }
 
+            selectedSlotIndex = -1;
             selectedInstanceId = null;
             SelectionChanged?.Invoke();
         }

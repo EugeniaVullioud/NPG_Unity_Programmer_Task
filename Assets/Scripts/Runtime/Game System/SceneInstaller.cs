@@ -21,6 +21,8 @@ public sealed class SceneInstaller : MonoBehaviour
     [Header("Scene Pickups")]
     [SerializeField] List<WorldItemPickup> pickups = new();
 
+    [Header("Inventory")]
+    [SerializeField] InventoryInputController inventoryInputController;
     ItemInstanceFactory itemFactory;
 
     SceneUIInstaller _UIInstaller; 
@@ -45,7 +47,11 @@ public sealed class SceneInstaller : MonoBehaviour
     void Install()
     {
         _UIInstaller = new SceneUIInstaller(inventoryUI, instructionsUI, saveLoadUI, cursorController);
-        _UIInstaller.Initialize(bootstrapper);
+
+        var selectionController = new InventorySelectionController(bootstrapper.InventorySystem.Inventory);
+        _UIInstaller.Initialize(bootstrapper, selectionController);
+
+        inventoryInputController.Bind(selectionController, bootstrapper.InventorySystem.Service);
     }
     void InitializeItems(InventorySystem inventorySystem)
     {

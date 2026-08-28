@@ -27,11 +27,11 @@ namespace Game.UI
         /// <summary>
         /// Installs the application dependencies into each UI component.
         /// </summary>
-        public void Initialize(GameBootstrapper bootstrapper)
+        public void Initialize(GameBootstrapper bootstrapper, InventorySelectionController selectionController)
         {
             if (inventoryUI != null)
             {
-                inventoryUI.Initialize(bootstrapper.InventorySystem);
+                inventoryUI.Initialize(bootstrapper.InventorySystem, selectionController);
             }        
 
             if (saveLoadUI != null)
@@ -41,26 +41,3 @@ namespace Game.UI
         }
     }
 }
-/*
-[SerializeField] InventoryUI inventoryUI;
-[SerializeField] SaveLoadUI saveLoadUI;
-[SerializeField] InstructionsUI instructionsUI;
-[SerializeField] PauseUI pauseUI;
-
-[SerializeField] GameBootstrapper bootstrapper;
-        [SerializeField] SceneUIConfiguration configuration;
-
-void Start()
-{
-    InventorySystem inventory =
-        bootstrapper.InventorySystem;
-
-    inventoryUI?.Initialize(inventory);
-
-    saveLoadUI?.Initialize(
-        bootstrapper.SaveGameService,
-        bootstrapper.GameFlowService);
-
-    instructionsUI?.Initialize();
-
-    pauseUI?.Initialize(); */

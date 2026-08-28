@@ -39,6 +39,8 @@ namespace Game.Inventory
         /// </summary>
         public InventorySaveParticipant SaveParticipant { get; private set; }
 
+        ConsumableItemUseHandler consumableHandler = new ConsumableItemUseHandler();
+
         private readonly SaveManager saveManager;
         private readonly int inventoryCapacity;
 
@@ -67,6 +69,7 @@ namespace Game.Inventory
             InventoryQuery query = new InventoryQuery(Inventory, ItemDatabase);
 
             ItemActionService actions = new ItemActionService(Inventory, mutations, ItemDatabase);
+            actions.RegisterHandler(consumableHandler);
 
             Service = new InventoryService(Inventory, mutations,
                 //query,        

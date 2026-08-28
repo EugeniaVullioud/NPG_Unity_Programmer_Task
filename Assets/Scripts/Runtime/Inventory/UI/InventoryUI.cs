@@ -57,10 +57,10 @@ namespace Game.Inventory
                 slots[i] = slot;
             }
         }
-        public void Initialize(InventorySystem system)
+        public void Initialize(InventorySystem system, InventorySelectionController selectionController)
         {
             inventorySystem = system;
-            selectionController = new InventorySelectionController(inventorySystem.Inventory);
+            this.selectionController = selectionController;
 
             detailsController = new InventoryDetailsController(inventorySystem.Inventory, inventorySystem.ItemDatabase, itemDetailsPanel, selectionController);
             CreateSlots();
