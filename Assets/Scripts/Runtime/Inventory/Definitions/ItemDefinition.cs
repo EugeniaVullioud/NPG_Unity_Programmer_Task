@@ -20,6 +20,7 @@ namespace Game.Inventory
 
         [Header("Classification")]
         [SerializeField] ItemCategory category;
+        [SerializeField] ItemRarity rarity;
 
         [Header("Stacking")]
         [Min(1)][SerializeField] int maxStackSize = 1;
@@ -37,6 +38,7 @@ namespace Game.Inventory
         public Sprite Icon => icon;
 
         public ItemCategory Category => category;
+        public ItemRarity Rarity => rarity;
         public bool IsEquippable => equippable;
 
         /// <summary>

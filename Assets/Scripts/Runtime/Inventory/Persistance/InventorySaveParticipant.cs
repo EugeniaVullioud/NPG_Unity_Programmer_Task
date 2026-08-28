@@ -53,19 +53,6 @@ namespace Game.Inventory
                     slotData.DefinitionId = item.DefinitionId;
 
                     slotData.Quantity = item.Quantity;
-
-
-                    for (int m = 0; m < item.Modifiers.Count; m++)
-                    {
-                        ItemModifierInstance modifier = item.Modifiers[m];
-
-                        slotData.Modifiers.Add(new ItemModifierSaveData
-                        {
-                            InstanceId = modifier.InstanceId,
-                            DefinitionId = modifier.DefinitionId,
-                            Value = modifier.Value
-                        });
-                    }
                 }
 
                 data.Slots.Add(slotData);
@@ -111,43 +98,9 @@ namespace Game.Inventory
 
                 int quantity = Math.Min(slotData.Quantity, definition.MaxStackSize);
 
-                float durability = definition.HasDurability ? Math.Clamp(slotData.Durability, 0f, definition.MaximumDurability) : 0f;
 
-                ItemInstance item = new ItemInstance(
-                        slotData.InstanceId,
-                        slotData.DefinitionId,
-                        quantity
-                        );
+                ItemInstance item = new ItemInstance(slotData.InstanceId, slotData.DefinitionId, quantity);
 
-                List<ItemModifierInstance> modifiers = new();
-
-                HashSet<string> modifierIds = new(StringComparer.Ordinal);
-
-                if (slotData.Modifiers != null)
-                {
-                    for (int m = 0; m < slotData.Modifiers.Count; m++)
-                    {
-                        ItemModifierSaveData modifierData = slotData.Modifiers[m];
-
-                        if (modifierData == null) continue;
-
-                        if (string.IsNullOrWhiteSpace(modifierData.InstanceId) ||
-                            string.IsNullOrWhiteSpace(modifierData.DefinitionId)) continue;
-
-
-                        if (!modifierIds.Add(modifierData.InstanceId)) continue;
-                        if (!modifierDatabase.TryGet(modifierData.DefinitionId, out _)) continue;
-
-                        modifiers.Add(new ItemModifierInstance
-                            (
-                                modifierData.InstanceId,
-                                modifierData.DefinitionId,
-                                modifierData.Value)
-                            );
-                    }
-                }
-
-                item.RestoreModifiers(modifiers);
                 inventory.RestoreSlot(slotData.SlotIndex, item);
             }
 

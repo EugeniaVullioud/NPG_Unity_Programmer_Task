@@ -297,30 +297,12 @@ namespace Game.Inventory
             if (left.DefinitionId != right.DefinitionId) return false;
             if (left.Quantity >= definition.MaxStackSize) return false;
 
-            if (!left.Durability.Equals(right.Durability)) return false;
-            if (left.Modifiers.Count != right.Modifiers.Count) return false;
-
-            for (int i = 0; i < left.Modifiers.Count; i++)
-            {
-                ItemModifierInstance a = left.Modifiers[i];
-                ItemModifierInstance b = right.Modifiers[i];
-
-                if (a.DefinitionId != b.DefinitionId || !a.Value.Equals(b.Value)) return false;
-
-            }
             return true;
         }
 
         static void CopyRuntimeState(ItemInstance source, ItemInstance destination)
         {
-            destination.SetDurability(source.Durability);
-
-            for (int i = 0; i < source.Modifiers.Count; i++)
-            {
-                ItemModifierInstance sourceModifier = source.Modifiers[i];
-
-                destination.AddModifier(new ItemModifierInstance(sourceModifier.DefinitionId, sourceModifier.Value));
-            }
+            
         }
 
         int FindEmptySlot()

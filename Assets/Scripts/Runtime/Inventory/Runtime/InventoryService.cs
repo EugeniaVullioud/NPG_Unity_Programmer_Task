@@ -18,11 +18,6 @@ namespace Game.Inventory
         public InventoryMutationService Mutation { get; }
 
         /// <summary>
-        /// Gets inventory query operations.
-        /// </summary>
-        public InventoryQuery Query { get; }
-
-        /// <summary>
         /// Gets item-use operations.
         /// </summary>
         public ItemActionService Actions { get; }

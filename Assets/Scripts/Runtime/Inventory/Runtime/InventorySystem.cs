@@ -66,14 +66,10 @@ namespace Game.Inventory
 
             InventoryMutationService mutations = new InventoryMutationService(Inventory, ItemDatabase);
 
-            InventoryQuery query = new InventoryQuery(Inventory, ItemDatabase);
-
             ItemActionService actions = new ItemActionService(Inventory, mutations, ItemDatabase);
             actions.RegisterHandler(consumableHandler);
 
-            Service = new InventoryService(Inventory, mutations,
-                //query,        
-                actions, Equipment);
+            Service = new InventoryService(Inventory, mutations, actions, Equipment);
 
             SaveParticipant = new InventorySaveParticipant(Inventory, ItemDatabase);
 

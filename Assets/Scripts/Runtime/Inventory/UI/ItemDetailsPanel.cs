@@ -14,7 +14,6 @@ namespace Game.Inventory
         [SerializeField] TMP_Text descriptionText;
         [SerializeField] TMP_Text rarityText;
         [SerializeField] TMP_Text quantityText;
-        [SerializeField] TMP_Text durabilityText;
         [SerializeField] TMP_Text modifiersText;
         [SerializeField] Image icon;
 
@@ -54,18 +53,7 @@ namespace Game.Inventory
             {
                 quantityText.text = $"Quantity: {item.Quantity}";
             }
-
-            if (durabilityText != null)
-            {
-                if (definition.HasDurability)
-                {
-                    durabilityText.text = $"Durability: " + $"{item.Durability}/" + $"{definition.MaximumDurability}";
-                }
-                else
-                {
-                    durabilityText.text = string.Empty;
-                }
-            }
+    
 
             if (icon != null)
             {
@@ -74,7 +62,6 @@ namespace Game.Inventory
                 icon.enabled = definition.Icon != null;
             }
 
-            UpdateModifiers(item);
         }
 
         /// <summary>
@@ -83,38 +70,6 @@ namespace Game.Inventory
         public void Hide()
         {
             gameObject.SetActive(false);
-        }
-
-        void UpdateModifiers(ItemInstance item)
-        {
-            if (modifiersText == null) return;
-
-
-            if (item.Modifiers.Count == 0)
-            {
-                modifiersText.text = string.Empty;
-                return;
-            }
-
-            System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-            for (int i = 0; i < item.Modifiers.Count; i++)
-            {
-                ItemModifierInstance modifier = item.Modifiers[i];
-
-                builder.Append(modifier.DefinitionId);
-
-                builder.Append(": ");
-
-                builder.Append(modifier.Value);
-
-                if (i < item.Modifiers.Count - 1)
-                {
-                    builder.AppendLine();
-                }
-            }
-
-            modifiersText.text = builder.ToString();
         }
     }
 }
