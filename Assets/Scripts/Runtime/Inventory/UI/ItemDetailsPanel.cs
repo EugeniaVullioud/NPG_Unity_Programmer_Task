@@ -10,36 +10,24 @@ namespace Game.Inventory
     /// </summary>
     public sealed class ItemDetailsPanel : MonoBehaviour
     {
-        [SerializeField]
-        private TMP_Text nameText;
+        [SerializeField] TMP_Text nameText;
+        [SerializeField] TMP_Text descriptionText;
+        [SerializeField] TMP_Text rarityText;
+        [SerializeField] TMP_Text quantityText;
+        [SerializeField] TMP_Text durabilityText;
+        [SerializeField] TMP_Text modifiersText;
+        [SerializeField] Image icon;
 
-        [SerializeField]
-        private TMP_Text descriptionText;
-
-        [SerializeField]
-        private TMP_Text rarityText;
-
-        [SerializeField]
-        private TMP_Text quantityText;
-
-        [SerializeField]
-        private TMP_Text durabilityText;
-
-        [SerializeField]
-        private TMP_Text modifiersText;
-
-        [SerializeField]
-        private Image icon;
-
+        void Awake()
+        {
+            Hide();
+        }
         /// <summary>
         /// Shows information about an item.
         /// </summary>
-        public void Show(
-            ItemInstance item,
-            ItemDefinition definition)
+        public void Show(ItemInstance item, ItemDefinition definition)
         {
-            if (item == null ||
-                definition == null)
+            if (item == null || definition == null)
             {
                 Hide();
                 return;
@@ -49,55 +37,44 @@ namespace Game.Inventory
 
             if (nameText != null)
             {
-                nameText.text =
-                    definition.DisplayName;
+                nameText.text = definition.DisplayName;
             }
 
             if (descriptionText != null)
             {
-                descriptionText.text =
-                    definition.Description;
+                descriptionText.text = definition.Description;
             }
 
             if (rarityText != null)
             {
-                rarityText.text =
-                    definition.Rarity.ToString();
+                rarityText.text = definition.Rarity.ToString();
             }
 
             if (quantityText != null)
             {
-                quantityText.text =
-                    $"Quantity: {item.Quantity}";
+                quantityText.text = $"Quantity: {item.Quantity}";
             }
 
             if (durabilityText != null)
             {
                 if (definition.HasDurability)
                 {
-                    durabilityText.text =
-                        $"Durability: " +
-                        $"{item.Durability}/" +
-                        $"{definition.MaximumDurability}";
+                    durabilityText.text = $"Durability: " + $"{item.Durability}/" + $"{definition.MaximumDurability}";
                 }
                 else
                 {
-                    durabilityText.text =
-                        string.Empty;
+                    durabilityText.text = string.Empty;
                 }
             }
 
             if (icon != null)
             {
-                icon.sprite =
-                    definition.Icon;
+                icon.sprite = definition.Icon;
 
-                icon.enabled =
-                    definition.Icon != null;
+                icon.enabled = definition.Icon != null;
             }
 
-            UpdateModifiers(
-                item);
+            UpdateModifiers(item);
         }
 
         /// <summary>
@@ -108,40 +85,28 @@ namespace Game.Inventory
             gameObject.SetActive(false);
         }
 
-        private void UpdateModifiers(
-            ItemInstance item)
+        void UpdateModifiers(ItemInstance item)
         {
-            if (modifiersText == null)
-            {
-                return;
-            }
+            if (modifiersText == null) return;
+
 
             if (item.Modifiers.Count == 0)
             {
-                modifiersText.text =
-                    string.Empty;
-
+                modifiersText.text = string.Empty;
                 return;
             }
 
-            System.Text.StringBuilder builder =
-                new System.Text.StringBuilder();
+            System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
-            for (int i = 0;
-                 i < item.Modifiers.Count;
-                 i++)
+            for (int i = 0; i < item.Modifiers.Count; i++)
             {
-                ItemModifierInstance modifier =
-                    item.Modifiers[i];
+                ItemModifierInstance modifier = item.Modifiers[i];
 
-                builder.Append(
-                    modifier.DefinitionId);
+                builder.Append(modifier.DefinitionId);
 
-                builder.Append(
-                    ": ");
+                builder.Append(": ");
 
-                builder.Append(
-                    modifier.Value);
+                builder.Append(modifier.Value);
 
                 if (i < item.Modifiers.Count - 1)
                 {
@@ -149,8 +114,7 @@ namespace Game.Inventory
                 }
             }
 
-            modifiersText.text =
-                builder.ToString();
+            modifiersText.text = builder.ToString();
         }
     }
 }

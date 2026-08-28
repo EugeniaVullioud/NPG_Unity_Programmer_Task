@@ -17,8 +17,11 @@ namespace Game.Inventory
         [SerializeField] InventoryDragController dragController;
         [SerializeField] InventorySlotUI slotPrefab;
         [SerializeField] Transform slotContainer;
+        [SerializeField] ItemDetailsPanel itemDetailsPanel;
 
         InventorySystem inventorySystem;
+        InventorySelectionController selectionController;
+        InventoryDetailsController detailsController;
 
         InventorySlotUI[] slots;
 
@@ -27,6 +30,15 @@ namespace Game.Inventory
             if (inventorySystem == null || inventorySystem.Inventory == null) return;
 
             inventorySystem.Inventory.Changed -= OnInventoryChanged;
+
+            detailsController?.Dispose();
+            selectionController?.Dispose();
+
+            detailsController = null;
+            selectionController = null;
+
+            DraggedSlot = -1;
+            dragController?.End();
         }
 
         void CreateSlots()
@@ -41,18 +53,22 @@ namespace Game.Inventory
 
                 slot.Bind(i, inventorySystem.Service, inventorySystem.ItemDatabase);
                 slot.Bind(dragController);
+                slot.Bind(selectionController, detailsController);
                 slots[i] = slot;
             }
         }
         public void Initialize(InventorySystem system)
         {
             inventorySystem = system;
+            selectionController = new InventorySelectionController(inventorySystem.Inventory);
 
+            detailsController = new InventoryDetailsController(inventorySystem.Inventory, inventorySystem.ItemDatabase, itemDetailsPanel, selectionController);
             CreateSlots();
 
             inventorySystem.Inventory.Changed += OnInventoryChanged;
 
             RefreshAll();
+            RefreshSelectionVisuals();
         }
         void OnInventoryChanged(InventoryChangedEventArgs change)
         {
@@ -74,6 +90,8 @@ namespace Game.Inventory
 
                     break;
 
+                case InventoryChangeType.Added:
+                case InventoryChangeType.Removed:
                 case InventoryChangeType.ItemChanged:
 
                     RefreshSlot(change.SlotIndex);
@@ -98,10 +116,7 @@ namespace Game.Inventory
 
         void RefreshSlot(int index)
         {
-            if (index < 0 || index >= slots.Length)
-            {
-                return;
-            }
+            if (index < 0 || index >= slots.Length) return;
 
             slots[index].Refresh();
         }
@@ -112,6 +127,35 @@ namespace Game.Inventory
             {
                 slots[i].Refresh();
             }
+        }
+        void RefreshSelectionVisuals()
+        {
+            if (selectionController == null) return;
+
+            selectionController.TryGetSelectedSlot(out int selectedSlot);
+
+            for (int i = 0; i < slots.Length; i++)
+            {
+                slots[i].SetSelected(i == selectedSlot);
+            }
+        }
+        /// <summary>
+        /// Attempts to use the currently selected inventory item.
+        /// The item-use system determines whether the item can be used and whether using it consumes inventory quantity.
+        /// </summary>
+        public ItemUseResult UseSelected()
+        {
+            if (selectionController == null)
+            {
+                return ItemUseResult.Failed(ItemUseFailure.ItemNotFound);
+            }
+
+            if (!selectionController.TryGetSelectedSlot(out int slotIndex))
+            {
+                return ItemUseResult.Failed(ItemUseFailure.ItemNotFound);
+            }
+
+            return inventorySystem.Service.Actions.Use(slotIndex);
         }
     }
 }
