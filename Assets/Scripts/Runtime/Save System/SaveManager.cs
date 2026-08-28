@@ -147,7 +147,33 @@ namespace Game.SaveSystem
                 return SaveOperationResult.Failed(SaveOperationFailureReason.ReadFailed, exception.Message);
             }
         }
+        /// <summary>
+        /// Deletes all save files from the save directory.
+        /// </summary>
+        public SaveOperationResult DeleteAll()
+        {
+            try
+            {
+                if (!Directory.Exists(rootPath))
+                {
+                    return SaveOperationResult.Succeeded();
+                }
 
+                Directory.Delete(rootPath, true);
+
+                //foreach (string file in Directory.GetFiles(rootPath)) File.Delete(file);
+
+                Directory.CreateDirectory(rootPath);
+
+                return SaveOperationResult.Succeeded();
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError($"Failed to delete all saves: {exception}");
+
+                return SaveOperationResult.Failed(SaveOperationFailureReason.WriteFailed, exception.Message);
+            }
+        }
         /// <summary>
         /// Deletes a save slot.
         /// </summary>

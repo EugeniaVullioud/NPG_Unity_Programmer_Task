@@ -65,7 +65,7 @@ namespace Game.SaveSystem
         void Show()
         {
             Open();
-            Refresh();
+            //Refresh();
         }
         /// <summary>
         /// Refreshes the save slot UI using the latest save slot information.

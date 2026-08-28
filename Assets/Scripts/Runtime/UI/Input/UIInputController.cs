@@ -9,6 +9,7 @@ namespace Game.UI
     {
         [SerializeField] BaseUI inventoryUI;
         [SerializeField] BaseUI menuUI;
+        [SerializeField] GameplayUI gamplayUI;
 
         [SerializeField] InputActionReference toggleInventoryAction;
         [SerializeField] InputActionReference toggleMenuAction;
@@ -60,6 +61,7 @@ namespace Game.UI
                 return;
             }
             inventoryUI.Toggle();
+            if (inventoryUI.IsOpen) gamplayUI.SetCurrent(inventoryUI);
         }
 
         /// <summary>
@@ -74,6 +76,8 @@ namespace Game.UI
             }
 
             menuUI.Toggle();
+            if (menuUI.IsOpen) gamplayUI.SetCurrent(menuUI);
+
         }
     }
 }

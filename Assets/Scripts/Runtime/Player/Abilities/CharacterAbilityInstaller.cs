@@ -28,21 +28,22 @@ namespace Game.Character
         PickupAbility _pickupAbility;
         JumpAbility _jumpAbility;
 
-        void Start()
+        void Awake()
         {
             _abilityController = new CharacterAbilityController();
 
-            InstallJumpAbility();
+            //InstallJumpAbility();
             InstallPickupAbility();
         }
 
         /// <summary>
         /// Creates and registers the character's jump ability using its configured settings.
         /// </summary>
-        void InstallJumpAbility()
+        public void InstallJumpAbility(CharacterMotor motor)
         {
             bool initiallyUnlocked = IsInitiallyUnlocked(AbilityId.Jump);
-            _jumpAbility = new JumpAbility(_characterMotor.Rigidbody, _characterMotor.GroundProvider, _jumpSettings, initiallyUnlocked);
+            _jumpAbility = new JumpAbility(motor.Rigidbody, motor.GroundProvider, _jumpSettings, initiallyUnlocked);
+            //_jumpAbility = new JumpAbility(_characterMotor.Rigidbody, _characterMotor.GroundProvider, _jumpSettings, initiallyUnlocked);
             _abilityController.Register(_jumpAbility);
         }
         // <summary>

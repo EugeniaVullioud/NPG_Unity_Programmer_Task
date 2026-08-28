@@ -15,6 +15,7 @@ namespace Game.Character
         void Start()
         {
             _abilities = _abilityInstaller.AbilityController;
+            _abilityInstaller.InstallJumpAbility(_motor);
         }
         /// <summary>
         /// Processes character input and advances abilities and movement during the physics update.

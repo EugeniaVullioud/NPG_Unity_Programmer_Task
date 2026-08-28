@@ -1,7 +1,6 @@
 using Game.Inventory;
 using Game.SaveSystem;
 using UnityEngine;
-using static Codice.CM.Common.CmCallContext;
 namespace Game.UI
 {
     /// <summary>
@@ -19,6 +18,7 @@ namespace Game.UI
 
         SaveLoadUI loadUI;
         BaseUI current;
+        BaseUI last;
 
         void Awake()
         {
@@ -29,6 +29,7 @@ namespace Game.UI
         /// </summary>
         public void OpenInventory()
         {
+            last = current;
             current?.Close();
             inventory.Open();
             current = inventory;
@@ -39,8 +40,9 @@ namespace Game.UI
         /// </summary>
         public void OpenSave()
         {
+            last = current;
             current?.Close();
-
+            saveLoad.Open();
             loadUI.ShowSaveMode();
             current = saveLoad;
 
@@ -51,8 +53,9 @@ namespace Game.UI
         /// </summary>
         public void OpenLoad()
         {
+            last = current;
             current?.Close();
-
+            saveLoad.Open();
             loadUI.ShowLoadMode();
             current = saveLoad;
         }
@@ -62,6 +65,7 @@ namespace Game.UI
         /// </summary>
         public void OpenInstructions()
         {
+            last = current;
             current?.Close();
             instructions.Open();
             current = instructions;
@@ -72,9 +76,22 @@ namespace Game.UI
         /// </summary>
         public void OpenPause()
         {
+            last = current;
             current?.Close();
             pause.Open();
             current = pause;
+        }
+
+        public void Back()
+        {
+            current?.Close();
+            last.Open();
+            current = last;
+        }
+        public void SetCurrent(BaseUI ui)
+        {
+            last = current;
+            current = ui;
         }
     }
 
