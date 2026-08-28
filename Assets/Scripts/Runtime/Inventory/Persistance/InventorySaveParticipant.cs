@@ -14,7 +14,6 @@ namespace Game.Inventory
 
         readonly Inventory inventory;
         readonly ItemDatabase itemDatabase;
-        readonly ItemModifierDatabase modifierDatabase;
 
         /// <inheritdoc />
         public string Id => "inventory";

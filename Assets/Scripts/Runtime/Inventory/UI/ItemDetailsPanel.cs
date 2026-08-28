@@ -14,7 +14,6 @@ namespace Game.Inventory
         [SerializeField] TMP_Text descriptionText;
         [SerializeField] TMP_Text rarityText;
         [SerializeField] TMP_Text quantityText;
-        [SerializeField] TMP_Text modifiersText;
         [SerializeField] Image icon;
 
         void Awake()

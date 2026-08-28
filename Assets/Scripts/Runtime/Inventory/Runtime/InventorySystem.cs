@@ -30,11 +30,6 @@ namespace Game.Inventory
         public ItemDatabase ItemDatabase { get; }
 
         /// <summary>
-        /// Gets the modifier database.
-        /// </summary>
-        public ItemModifierDatabase ModifierDatabase { get; }
-
-        /// <summary>
         /// Gets the inventory save participant.
         /// </summary>
         public InventorySaveParticipant SaveParticipant { get; private set; }
@@ -47,10 +42,9 @@ namespace Game.Inventory
         /// <summary>
         /// Creates the inventory subsystem.
         /// </summary>
-        public InventorySystem(ItemDatabase itemDatabase, ItemModifierDatabase modifierDatabase, SaveManager saveManager, int inventoryCapacity)
+        public InventorySystem(ItemDatabase itemDatabase,  SaveManager saveManager, int inventoryCapacity)
         {
             ItemDatabase = itemDatabase ?? throw new ArgumentNullException(nameof(itemDatabase));
-            ModifierDatabase = modifierDatabase ?? throw new ArgumentNullException(nameof(modifierDatabase));
 
             this.saveManager = saveManager ?? throw new ArgumentNullException(nameof(saveManager));
             this.inventoryCapacity = inventoryCapacity;

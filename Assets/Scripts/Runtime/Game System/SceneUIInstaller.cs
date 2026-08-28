@@ -1,6 +1,5 @@
 using Game.Inventory;
 using Game.SaveSystem;
-using UnityEngine;
 namespace Game.UI
 {
     // <summary>
@@ -11,7 +10,8 @@ namespace Game.UI
         InventoryUI inventoryUI;
         BaseUI instructionsUI;
         SaveLoadUI saveLoadUI;
-
+        MainMenuUI mainmenu;
+        
         UICursorController cursorController;
         
         /// <summary>
@@ -37,6 +37,14 @@ namespace Game.UI
             if (saveLoadUI != null)
             {
                 saveLoadUI.Initialize(bootstrapper.SaveGameService, bootstrapper.GameFlowService);
+            }
+
+            if (mainmenu != null)
+            {
+                mainmenu.Initialize(bootstrapper.GameFlowService);
+            }
+            if (instructionsUI != null)
+            {
             }
         }
     }
