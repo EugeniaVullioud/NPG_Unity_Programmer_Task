@@ -1,7 +1,9 @@
+using Game.UI;
 using Game.Inventory;
 using Game.Items;
 using System.Collections.Generic;
 using UnityEngine;
+using Game.SaveSystem;
 
 /// <summary>
 /// Composes scene-local dependencies using application-level systems created by the GameBootstrapper.
@@ -10,6 +12,10 @@ public sealed class SceneInstaller : MonoBehaviour
 {
     [Header("Scene UI")]
     [SerializeField] InventoryUI inventoryUI;
+    [SerializeField] UICursorController cursorController;
+    [SerializeField] BaseUI instructionsUI;
+    [SerializeField] SaveLoadUI saveLoadUI;
+
     [SerializeField] GameBootstrapper bootstrapper;
 
     [Header("Scene Pickups")]
@@ -17,6 +23,7 @@ public sealed class SceneInstaller : MonoBehaviour
 
     ItemInstanceFactory itemFactory;
 
+    SceneUIInstaller _UIInstaller; 
     void Start()
     {
         if (bootstrapper == null)
@@ -31,19 +38,14 @@ public sealed class SceneInstaller : MonoBehaviour
             return;
         }
 
-        Install(bootstrapper.InventorySystem);
+        Install();
         InitializeItems(bootstrapper.InventorySystem);
     }
 
-    void Install(InventorySystem inventorySystem)
+    void Install()
     {
-        if (inventoryUI == null)
-        {
-            Debug.LogError("SceneInstaller requires an InventoryUI.", this);
-            return;
-        }
-
-        inventoryUI.Initialize(inventorySystem);
+        _UIInstaller = new SceneUIInstaller(inventoryUI, instructionsUI, saveLoadUI, cursorController);
+        _UIInstaller.Initialize(bootstrapper);
     }
     void InitializeItems(InventorySystem inventorySystem)
     {

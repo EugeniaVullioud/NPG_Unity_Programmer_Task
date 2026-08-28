@@ -1,3 +1,4 @@
+using Game.UI;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,20 +7,20 @@ namespace Game.Inventory
     /// <summary>
     /// Coordinates the visual inventory representation. The UI listens to inventory events and updates only the affected slots rather than rebuilding the entire UI every frame.
     /// </summary>
-    public sealed class InventoryUI : MonoBehaviour
+    public sealed class InventoryUI : BaseUI
     {
         /// <summary>
         /// Gets the slot currently being dragged.
         /// </summary>
         public static int DraggedSlot { get; set; } = -1;
 
+        [SerializeField] InventoryDragController dragController;
         [SerializeField] InventorySlotUI slotPrefab;
         [SerializeField] Transform slotContainer;
 
         InventorySystem inventorySystem;
 
         InventorySlotUI[] slots;
-
 
         void OnDisable()
         {
@@ -39,7 +40,7 @@ namespace Game.Inventory
                 InventorySlotUI slot = Instantiate(slotPrefab, slotContainer);
 
                 slot.Bind(i, inventorySystem.Service, inventorySystem.ItemDatabase);
-
+                slot.Bind(dragController);
                 slots[i] = slot;
             }
         }

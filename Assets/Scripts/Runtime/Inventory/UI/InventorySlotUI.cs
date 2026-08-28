@@ -8,8 +8,10 @@ namespace Game.Inventory
     /// Presentation component for one inventory slot.
     /// It does not own inventory state.
     /// </summary>
-    public sealed class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDropHandler, IPointerEnterHandler
+    public sealed class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDropHandler, IPointerEnterHandler, IDragHandler, IEndDragHandler
     {
+        InventoryDragController dragController;
+
         [SerializeField] Image icon;
 
         [SerializeField] TMPro.TMP_Text quantityText;
@@ -30,7 +32,13 @@ namespace Game.Inventory
 
             Refresh();
         }
-
+        /// <summary>
+        /// Configures the drag controller.
+        /// </summary>
+        public void Bind(InventoryDragController dragController)
+        {
+            this.dragController = dragController;
+        }
         /// <summary>
         /// Refreshes the visual state from runtime inventory state.
         /// </summary>
@@ -70,8 +78,16 @@ namespace Game.Inventory
         public void OnBeginDrag(PointerEventData eventData)
         {
             InventoryUI.DraggedSlot = slotIndex;
-        }
 
+            dragController.Begin(icon, eventData);
+            Debug.Log("OnBeginDrag");
+
+        }
+        /// <inheritdoc />
+        public void OnDrag(PointerEventData eventData)
+        {
+            dragController.UpdateDrag(eventData);
+        }
         /// <inheritdoc />
         public void OnDrop(PointerEventData eventData)
         {
@@ -91,6 +107,17 @@ namespace Game.Inventory
             }
 
             InventoryUI.DraggedSlot = -1;
+            Debug.Log("OnDrop");
+
+        }
+        /// <inheritdoc />
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            dragController.End();
+            //InventoryUI.DraggedSlot = -1;
+
+            Debug.Log("OnEndDrag");
         }
 
         /// <inheritdoc />
