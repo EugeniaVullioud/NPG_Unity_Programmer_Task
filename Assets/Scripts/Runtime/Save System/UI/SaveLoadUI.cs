@@ -120,7 +120,6 @@ namespace Game.SaveSystem
             {
                 // Confirmation should be presented here.
                 // Once confirmed: SaveToSlot(slot.SlotId);
-                return;
             }
 
             SaveToSlot(slot.SlotId);

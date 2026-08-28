@@ -39,8 +39,6 @@ namespace Game.Inventory
                 Debug.Log($"Unable to use selected item: {result.Failure}");
                 return;
             }
-
-            Debug.Log("Item consumed.");
 #endif
 
         }
