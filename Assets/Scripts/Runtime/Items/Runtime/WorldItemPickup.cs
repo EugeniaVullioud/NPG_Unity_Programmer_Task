@@ -1,4 +1,3 @@
-using Game.Camera;
 using Game.Inventory;
 using System;
 using UnityEngine;
@@ -10,6 +9,10 @@ namespace Game.Items
     /// </summary>
     public sealed class WorldItemPickup : MonoBehaviour, IPickupable, IPickupSelectionFeedback
     {
+        [Header("Persistence")]
+        [SerializeField] string _pickupId;
+
+        public string PickupId => _pickupId;
         public enum PickupState
         {
             Available,
@@ -41,7 +44,7 @@ namespace Game.Items
         void Awake()
         {
             feedback = _feedbackProvider.GetComponentInChildren<IWorldPickupFeedback>();
-            if (feedback == null ) throw new ArgumentNullException(nameof(feedback));
+            if (feedback == null) throw new ArgumentNullException(nameof(feedback));
         }
         /// <summary>
         /// Installs application dependencies. This is intentionally explicit rather than looking up a global InventorySystem from the pickup.
@@ -95,16 +98,40 @@ namespace Game.Items
             feedback?.ResetFeedback();
             EnableCollision(true);
         }
+        public void SetSelected(bool selected)
+        {
+            feedback.SetHighlighted(selected);
+        }
+        internal void RestoreConsumed()
+        {
+            if (_state == PickupState.Consumed) return;
 
+            _state = PickupState.Consumed;
+
+            EnableCollision(false);
+
+            feedback?.ResetFeedback();
+
+            if (worldRepresentation != null) worldRepresentation.SetActive(false);
+            else gameObject.SetActive(false);
+        }
+        internal void RestoreAvailable()
+        {
+            _state = PickupState.Available;
+
+            EnableCollision(true);
+
+            if (worldRepresentation != null) worldRepresentation.SetActive(true);
+        }
 #if UNITY_EDITOR
         void OnValidate()
         {
             if (quantity < 1) quantity = 1;
-        }
 
-        public void SetSelected(bool selected)
-        {
-            feedback.SetHighlighted(selected);
+            if (string.IsNullOrWhiteSpace(_pickupId))
+            {
+                Debug.LogWarning($"WorldItemPickup '{name}' requires a unique Pickup ID.", this);
+            }
         }
 #endif
     }

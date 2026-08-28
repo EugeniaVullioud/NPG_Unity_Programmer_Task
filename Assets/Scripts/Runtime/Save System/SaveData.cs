@@ -1,4 +1,5 @@
 using Game.Inventory;
+using Game.Items;
 using System;
 
 namespace Game.SaveSystem
@@ -37,6 +38,11 @@ namespace Game.SaveSystem
         public EquipmentSaveData Equipment;
 
         /// <summary>
+        /// World items state.
+        /// </summary>
+        public WorldSaveData World = new();
+
+        /// <summary>
         /// Creates an empty save.
         /// </summary>
         public static SaveData Create()
@@ -47,7 +53,9 @@ namespace Game.SaveSystem
                 Metadata = new SaveMetadata(),
                 Player= new PlayerSaveData(),
                 Inventory = new InventorySaveData(),
-                Equipment = new EquipmentSaveData()
+                Equipment = new EquipmentSaveData(),
+                World = new WorldSaveData()
+
             };
         }
     }

@@ -74,7 +74,6 @@ namespace Game.Inventory
 
             if (data.Capacity != inventory.Capacity) return false;
 
-
             HashSet<string> itemIds = new(StringComparer.Ordinal);
 
             inventory.ClearWithoutEvents();
@@ -93,7 +92,6 @@ namespace Game.Inventory
                 if (!itemIds.Add(slotData.InstanceId)) continue;
                 if (!itemDatabase.TryGet(slotData.DefinitionId, out ItemDefinition definition)) continue;
                 if (slotData.Quantity <= 0) continue;
-
 
                 int quantity = Math.Min(slotData.Quantity, definition.MaxStackSize);
 

@@ -195,7 +195,6 @@ namespace Game.Inventory
             {
                 throw new InvalidOperationException($"Duplicate item instance ID '{item.InstanceId}'.");
             }
-
             RegisterItem(slotIndex, item);
             slots[slotIndex].SetItem(item);
         }

@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class GameBootstrapper: MonoBehaviour
 {
+    public static GameBootstrapper Instance { get; private set; }
+
     [Header("Definitions")]
     [SerializeField] ItemDatabase itemDatabase;
 
@@ -32,34 +34,45 @@ public class GameBootstrapper: MonoBehaviour
     public SaveGameService SaveGameService { get; private set; }
     void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         if (!ValidateConfiguration())
         {
             enabled = false;
             return;
         }
 
-        DontDestroyOnLoad(gameObject);
 
         itemDatabase.Initialize();
 
         SaveManager = new SaveManager();
         SaveGameService = new SaveGameService(SaveManager, saveSlotCount);
 
-        InventorySystem = new InventorySystem(itemDatabase,  SaveManager, inventoryCapacity);
-
-        InventorySystem.Initialize();
 
         ISceneValidator validator = new SceneValidator();
         SceneLoader = new SceneLoader(validator);
 
-        GameFlowService = new GameFlowService(SaveGameService, SceneLoader);
+        InventorySystem = new InventorySystem(itemDatabase,  SaveManager, inventoryCapacity);
+
+        InventorySystem.Initialize();
+        GameFlowService = new GameFlowService(SaveGameService, SceneLoader, InventorySystem);
+
     }
 
     bool ValidateConfiguration()
     {
         if (itemDatabase == null)
         {
+#if UNITY_EDITOR
             Debug.LogError("GameBootstrapper requires an ItemDatabase.", this);
+#endif
             return false;
         }     
         return true;

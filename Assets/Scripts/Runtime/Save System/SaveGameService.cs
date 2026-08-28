@@ -15,7 +15,7 @@ namespace Game.SaveSystem
     {
         readonly SaveManager saveManager;
         readonly int slotCount;
-
+         
         /// <summary>
         /// Initializes a new instance of the <see cref="SaveGameService"/> class.
         /// </summary>

@@ -38,7 +38,7 @@ namespace Game.SaveSystem
             }
             if (!participants.TryAdd(participant.Id, participant))
             {
-                throw new InvalidOperationException($"Save participant '{participant.Id}' is already registered.");
+              //  throw new InvalidOperationException($"Save participant '{participant.Id}' is already registered.");
             }
         }
 
@@ -65,7 +65,7 @@ namespace Game.SaveSystem
                 }
 
                 string json = JsonUtility.ToJson(saveData, false);
-
+             
                 string path = GetSlotPath(slotId);
 
                 if (!WriteAtomic(path, json))

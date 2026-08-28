@@ -90,6 +90,7 @@ namespace Game.UI
         }
         public void SetCurrent(BaseUI ui)
         {
+            last?.Close();
             last = current;
             current = ui;
         }

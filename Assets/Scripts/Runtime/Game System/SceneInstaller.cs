@@ -25,33 +25,45 @@ public sealed class SceneInstaller : MonoBehaviour
     [SerializeField] InventoryInputController inventoryInputController;
     ItemInstanceFactory itemFactory;
 
-    SceneUIInstaller _UIInstaller; 
+    SceneUIInstaller _UIInstaller;
+
+    // Should not be registered permanently by GameBootstrapper because its pickup list belongs to a particular scene.
+    WorldSaveParticipant worldSaveParticipant;
+
+    public bool IsInitialized { get; private set; }
+
     void Start()
     {
-        if (bootstrapper == null)
+        Initialize();
+    }
+    void Initialize()
+    {
+        if (IsInitialized)            return;
+        if (GameBootstrapper.Instance == null)
         {
             Debug.LogError("SceneInstaller requires a GameBootstrapper.", this);
             return;
         }
 
-        if (bootstrapper.InventorySystem == null)
+        if (GameBootstrapper.Instance.InventorySystem == null)
         {
             Debug.LogError("GameBootstrapper has not initialized the InventorySystem.", this);
             return;
         }
 
         Install();
-        InitializeItems(bootstrapper.InventorySystem);
+        InitializeItems(GameBootstrapper.Instance.InventorySystem);
+        IsInitialized = true;
     }
 
     void Install()
     {
         _UIInstaller = new SceneUIInstaller(inventoryUI, instructionsUI, saveLoadUI, cursorController);
 
-        var selectionController = new InventorySelectionController(bootstrapper.InventorySystem.Inventory);
-        _UIInstaller.Initialize(bootstrapper, selectionController);
+        var selectionController = new InventorySelectionController(GameBootstrapper.Instance.InventorySystem.Inventory);
+        _UIInstaller.Initialize(GameBootstrapper.Instance, selectionController);
 
-        inventoryInputController.Bind(selectionController, bootstrapper.InventorySystem.Service);
+        inventoryInputController.Bind(selectionController, GameBootstrapper.Instance.InventorySystem.Service);
     }
     void InitializeItems(InventorySystem inventorySystem)
     {
@@ -65,6 +77,9 @@ public sealed class SceneInstaller : MonoBehaviour
 
             pickup.Initialize(operation);
         }
+        worldSaveParticipant = new WorldSaveParticipant(pickups);
+
+        GameBootstrapper.Instance.SaveManager.Register(worldSaveParticipant);
     }
 
 }

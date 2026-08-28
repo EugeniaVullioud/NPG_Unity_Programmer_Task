@@ -65,7 +65,7 @@ namespace Game.SaveSystem
         void Show()
         {
             Open();
-            //Refresh();
+            Refresh();
         }
         /// <summary>
         /// Refreshes the save slot UI using the latest save slot information.
@@ -83,8 +83,8 @@ namespace Game.SaveSystem
             }
         }
 
-        void OnSlotSelected(int slotId)
-        {
+        async void OnSlotSelected(int slotId)
+        {        
             if (!TryGetSlot(slotId, out SaveSlotInfo slot)) return;
             switch (mode)
             {
@@ -101,19 +101,20 @@ namespace Game.SaveSystem
                     break;
             }
         }
-        void HandleLoad(SaveSlotInfo slot)
+        async void HandleLoad(SaveSlotInfo slot)
         {
             if (!slot.Exists) return;
 
-            SaveOperationResult result = gameFlowService.LoadGame(slot.SlotId);
-
-            if (!result.Success)
+            var result = gameFlowService.LoadGame(slot.SlotId);
+            await result;
+            
+            if (!result.Result.Success)
             {
-                HandleFailure(result);
+                HandleFailure(result.Result);
             }
         }
 
-        void HandleSave(SaveSlotInfo slot)
+        async void HandleSave(SaveSlotInfo slot)
         {
             if (slot.Exists)
             {
