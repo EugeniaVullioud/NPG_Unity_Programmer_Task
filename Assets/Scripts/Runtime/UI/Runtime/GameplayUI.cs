@@ -1,5 +1,6 @@
 using Game.Inventory;
 using Game.SaveSystem;
+using System.Collections.Generic;
 using UnityEngine;
 namespace Game.UI
 {
@@ -18,80 +19,84 @@ namespace Game.UI
 
         SaveLoadUI loadUI;
         BaseUI current;
-        BaseUI last;
+        readonly Stack<BaseUI> history = new();
 
         void Awake()
         {
-            if (saveLoad!= null) loadUI= saveLoad as SaveLoadUI;
+            if (saveLoad != null) loadUI = saveLoad as SaveLoadUI;
         }
-        /// <summary>
-        /// Opens the inventory UI.
-        /// </summary>
+
         public void OpenInventory()
         {
-            last = current;
-            current?.Close();
-            inventory.Open();
-            current = inventory;
+            Open(inventory);
         }
 
-        /// <summary>
-        /// Opens the save/load UI in save mode.
-        /// </summary>
         public void OpenSave()
         {
-            last = current;
-            current?.Close();
-            saveLoad.Open();
-            loadUI.ShowSaveMode();
-            current = saveLoad;
-
+            Open(saveLoad);
+            loadUI?.ShowSaveMode();
         }
 
-        /// <summary>
-        /// Opens the save/load UI in load mode.
-        /// </summary>
         public void OpenLoad()
         {
-            last = current;
-            current?.Close();
-            saveLoad.Open();
-            loadUI.ShowLoadMode();
-            current = saveLoad;
+            Open(saveLoad);
+            loadUI?.ShowLoadMode();
         }
 
-        /// <summary>
-        /// Opens the instructions UI.
-        /// </summary>
         public void OpenInstructions()
         {
-            last = current;
-            current?.Close();
-            instructions.Open();
-            current = instructions;
+            Open(instructions);
         }
 
-        /// <summary>
-        /// Opens the pause UI.
-        /// </summary>
         public void OpenPause()
         {
-            last = current;
-            current?.Close();
-            pause.Open();
-            current = pause;
+            Open(pause);
+        }
+
+        void Open(BaseUI ui)
+        {
+            if (ui == null) return;
+
+            if (current == ui) return;
+
+            if (current != null)
+            {
+                current.Close();
+                history.Push(current);
+            }
+
+            ui.Open();
+            current = ui;
         }
 
         public void Back()
         {
-            current?.Close();
-            last.Open();
-            current = last;
+            if (current == null) return;
+
+            current.Close();
+
+            if (history.Count == 0)
+            {
+                current = null;
+                return;
+            }
+
+            current = history.Pop();
+            current.Open();
         }
+
         public void SetCurrent(BaseUI ui)
         {
-            last?.Close();
-            last = current;
+            if (ui == null) return;
+
+            if (current == ui) return;
+
+            if (current != null)
+            {
+                current.Close();
+                history.Push(current);
+            }
+
             current = ui;
         }
     }

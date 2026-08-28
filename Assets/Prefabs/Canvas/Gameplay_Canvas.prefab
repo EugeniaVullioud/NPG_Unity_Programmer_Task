@@ -249,6 +249,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7256226688997893933}
+  - component: {fileID: 6237906919185668903}
   m_Layer: 5
   m_Name: Input
   m_TagString: Untagged
@@ -276,6 +277,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6237906919185668903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 254621396856834542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba04b04a62e07d940a1ed692f07ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AD_Runtime::Game.UI.UIInputSource
+  cursorController: {fileID: 0}
 --- !u!1 &287054297402570620
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,7 +484,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1259094279164901899}
   - component: {fileID: 9136039306498069509}
-  - component: {fileID: 8498186425263188691}
   m_Layer: 5
   m_Name: Main Menu
   m_TagString: Untagged
@@ -512,19 +525,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: AD_Runtime::Game.UI.MainMenuUI
   _ui: {fileID: 8933888130477591149}
   _startOpen: 0
---- !u!114 &8498186425263188691
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 599218208709101740}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba04b04a62e07d940a1ed692f07ab7fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: AD_Runtime::Game.UI.UIInputSource
-  cursorController: {fileID: 0}
 --- !u!1 &627053080976829136
 GameObject:
   m_ObjectHideFlags: 0
@@ -5690,6 +5690,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5307675005645115615}
+  - component: {fileID: 4670397731287277200}
   m_Layer: 5
   m_Name: Input
   m_TagString: Untagged
@@ -5717,6 +5718,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4670397731287277200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8933888130477591149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba04b04a62e07d940a1ed692f07ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AD_Runtime::Game.UI.UIInputSource
+  cursorController: {fileID: 0}
 --- !u!1 &9111618164653926379
 GameObject:
   m_ObjectHideFlags: 0
