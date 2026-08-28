@@ -17,8 +17,13 @@ namespace Game.UI
         [SerializeField] BaseUI instructions;
         [SerializeField] BaseUI pause;
 
+        SaveLoadUI loadUI;
         BaseUI current;
 
+        void Awake()
+        {
+            if (saveLoad!= null) loadUI= saveLoad as SaveLoadUI;
+        }
         /// <summary>
         /// Opens the inventory UI.
         /// </summary>
@@ -36,7 +41,7 @@ namespace Game.UI
         {
             current?.Close();
 
-            //saveLoad.ShowSave();
+            loadUI.ShowSaveMode();
             current = saveLoad;
 
         }
@@ -48,9 +53,8 @@ namespace Game.UI
         {
             current?.Close();
 
-            //saveLoad.ShowLoad();
+            loadUI.ShowLoadMode();
             current = saveLoad;
-
         }
 
         /// <summary>
